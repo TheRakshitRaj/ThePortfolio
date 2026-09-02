@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { motion } from 'framer-motion';
-import bgBlack from '../assets/hackathon_bg_new.png';
+
+const bgBlack = 'https://res.cloudinary.com/dphtrtpjx/image/upload/v1788349723/hackathon_bg_new_bkhxku.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,7 +65,7 @@ const OrbitalSphereDark = () => {
     <div className="absolute right-[2%] top-[2%] w-[180px] h-[180px] pointer-events-none hidden lg:block z-30">
       {/* Outer ambient bronze glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(201,162,109,0.25)_0%,_transparent_65%)] blur-[30px] rounded-full" />
-      
+
       {/* Rotating rings */}
       <div ref={ringRef} className="absolute inset-0">
         <svg viewBox="0 0 200 200" className="w-full h-full opacity-80">
@@ -77,11 +78,11 @@ const OrbitalSphereDark = () => {
 
       {/* The 3D CSS Sphere */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div 
+        <motion.div
           animate={{ y: [-4, 4, -4] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           className="w-[80px] h-[80px] rounded-full relative flex items-center justify-center"
-          style={{ 
+          style={{
             background: 'radial-gradient(circle at 35% 30%, #E8C98A 0%, #C9A26D 30%, #4A3520 70%, #111 100%)',
             boxShadow: '0 20px 40px rgba(0,0,0,0.6), 0 10px 20px rgba(201,162,109,0.2), inset -10px -10px 20px rgba(0,0,0,0.5), inset 10px 10px 20px rgba(255,255,255,0.4)'
           }}>
@@ -95,36 +96,44 @@ const OrbitalSphereDark = () => {
 // ── Floating Glass Frame Component ──
 const HackathonCard = ({ hackathon }) => {
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ scale: 1.02, y: -2 }}
-      className="w-full relative rounded-[28px] mb-6 last:mb-0 transition-all duration-300 hackathon-card"
+      className="w-full relative rounded-[28px] mb-6 last:mb-0 transition-all duration-300 hackathon-card group"
       style={{
         background: 'linear-gradient(135deg, rgba(201,162,109,0.4) 0%, rgba(255,255,255,0.05) 50%, rgba(201,162,109,0.1) 100%)',
-        padding: '1px', 
+        padding: '1px',
         boxShadow: '0 0 30px rgba(201,162,109,0.15), 0 10px 30px rgba(0,0,0,0.4)',
-        height: '185px' 
+        height: '185px'
       }}
     >
       <div className="w-full h-full rounded-[27px] flex flex-row p-4 relative overflow-hidden"
-           style={{ 
-             background: 'linear-gradient(135deg, rgba(15,15,18,0.95), rgba(5,5,8,0.9))',
-             backdropFilter: 'blur(20px)',
-             WebkitBackdropFilter: 'blur(20px)'
-           }}>
-        
+        style={{
+          background: 'linear-gradient(135deg, rgba(15,15,18,0.95), rgba(5,5,8,0.9))',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)'
+        }}>
+
         <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
 
         {/* ── Preview Image ── */}
         <div className="w-[38%] h-full rounded-[20px] relative overflow-hidden flex-shrink-0 border border-white/5 bg-[#111]">
-          <div className="absolute inset-0" style={{ background: hackathon.imageGradient }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80" />
-          <div className="absolute bottom-4 left-0 w-full px-5 flex justify-between items-end">
+          {hackathon.imageUrl ? (
+            <img
+              src={hackathon.imageUrl}
+              alt={hackathon.projectTitle}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0" style={{ background: hackathon.imageGradient }} />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10" />
+          <div className="absolute bottom-4 left-0 w-full px-5 flex justify-between items-end z-20">
             <div>
               <div className="text-[#C9A26D] text-[10px] font-bold tracking-widest uppercase mb-1">{hackathon.eventTitle}</div>
               <div className="text-white text-[16px] font-medium" style={{ fontFamily: "'Inter', sans-serif" }}>WINNERS</div>
             </div>
             <div className="w-8 h-8 rounded bg-white/10 flex items-center justify-center backdrop-blur-md">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </div>
           </div>
         </div>
@@ -168,7 +177,7 @@ const Hackathons = () => {
   const sectionContentRef = useRef(null);
   const bgRef = useRef(null);
   const timelineLineRef = useRef(null);
-  
+
   const hackathons = [
     {
       id: 1,
@@ -177,7 +186,8 @@ const Hackathons = () => {
       description: 'Built an AI-powered legal document analyzer using RAG architecture to instantly summarize massive contracts under 24 hours.',
       tech: ['React', 'Node.js', 'OpenAI'],
       imageGradient: 'radial-gradient(circle at 50% 50%, #2a2015 0%, #111 100%)',
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><path d="M8 21h8M12 17v4M7 4h10M6 4v6c0 3.3 2.7 6 6 6s6-2.7 6-6V4"/></svg>
+      imageUrl: 'https://res.cloudinary.com/dphtrtpjx/image/upload/v1775906134/DevHeat_xgsgxo.jpg', // Link to hackathon image if available
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><path d="M8 21h8M12 17v4M7 4h10M6 4v6c0 3.3 2.7 6 6 6s6-2.7 6-6V4" /></svg>
     },
     {
       id: 2,
@@ -186,7 +196,8 @@ const Hackathons = () => {
       description: 'Product innovation platform developed during the national-level hackathon. Engineered a real-time collaborative workspace.',
       tech: ['React', 'Supabase', 'Tailwind'],
       imageGradient: 'radial-gradient(circle at 50% 50%, #1c1c2a 0%, #0a0a11 100%)',
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      imageUrl: 'https://res.cloudinary.com/dphtrtpjx/image/upload/v1775907899/id-odoo_fnhd9d.jpg', // Link to hackathon image if available
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
     },
     {
       id: 3,
@@ -195,7 +206,8 @@ const Hackathons = () => {
       description: 'Winning project that secured first place among competing teams. Built a highly scalable automated cloud pipeline processing data.',
       tech: ['MERN', 'AI', 'Cloud Services'],
       imageGradient: 'radial-gradient(circle at 50% 50%, #151a25 0%, #050811 100%)',
-      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><path d="M12 15l-2 5l9 -9l-9 -2l2 -5l-9 9l9 2z"/></svg>
+      imageUrl: 'https://res.cloudinary.com/dphtrtpjx/image/upload/v1775908375/Electrosphere_hzjdv2.jpg', // Link to hackathon image if available
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A26D" strokeWidth="1.5"><path d="M12 15l-2 5l9 -9l-9 -2l2 -5l-9 9l9 2z" /></svg>
     }
   ];
 
@@ -215,14 +227,14 @@ const Hackathons = () => {
     );
 
     // Dark background fade and scale
-    tlReveal.fromTo(bgRef.current, 
+    tlReveal.fromTo(bgRef.current,
       { scale: 1.1, filter: 'brightness(0)' },
       { scale: 1, filter: 'brightness(1)', duration: 2, ease: 'power2.out' },
       '-=1.2'
     );
 
     // Stagger in the text on the left
-    tlReveal.fromTo('.hackathon-text', 
+    tlReveal.fromTo('.hackathon-text',
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, stagger: 0.1, duration: 1, ease: 'back.out(1.2)' },
       '-=1.5'
@@ -254,53 +266,53 @@ const Hackathons = () => {
   return (
     <>
       <section ref={containerRef} id="hackathons" className="relative w-full overflow-hidden bg-[#000000]">
-        
+
         {/* The revealed inner container - allowing height to overflow naturally */}
         <div ref={sectionContentRef} className="relative w-full min-h-[100vh]" style={{ background: '#050508' }}>
-          
+
           {/* ── Background Layer ── 
               Locked to 100vh absolute so it doesn't stretch when content overflows */}
           <div className="absolute top-0 left-0 w-full h-[100vh] z-0 overflow-hidden pointer-events-none">
-            <div ref={bgRef} className="w-full h-full" 
-                 style={{ 
-                   backgroundImage: `url(${bgBlack})`, 
-                   backgroundSize: 'cover', 
-                   backgroundPosition: 'top center', 
-                   backgroundRepeat: 'no-repeat',
-                   opacity: 0.95
-                 }} />
+            <div ref={bgRef} className="w-full h-full"
+              style={{
+                backgroundImage: `url(${bgBlack})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'top center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.95
+              }} />
             {/* Soft dark vignette that seamlessly merges the bottom of the image to the solid #050508 background below it */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/10 via-transparent to-[#050508]" />
           </div>
 
           {/* ── Content Container ── */}
           <div className="relative w-full min-h-[100vh] max-w-[1440px] mx-auto px-6 md:px-10 lg:px-14 z-10 flex flex-col justify-start">
-            
+
             <div className="flex flex-col lg:flex-row items-start justify-between pt-[15vh] pb-[10vh]">
-              
+
               {/* ── Left Side: Text Content ── */}
               <div className="w-full lg:w-[36%] relative flex flex-col justify-start">
-                
+
                 <div className="flex items-center gap-4 mb-4 transform -rotate-90 origin-left absolute -left-12 top-[20%] -translate-y-1/2 opacity-20 hidden xl:flex hackathon-text">
-                   <span className="text-white text-[10px] tracking-[0.6em] uppercase">HACKATHONS</span>
+                  <span className="text-white text-[10px] tracking-[0.6em] uppercase">HACKATHONS</span>
                 </div>
 
                 <div className="pl-0 xl:pl-8">
                   <span className="uppercase tracking-[0.3em] text-[#C9A26D] text-[10px] font-semibold mb-4 flex items-center gap-2 hackathon-text">
                     MY JOURNEY
                   </span>
-                  
+
                   <h2 className="text-white leading-[1.0] mb-2 hackathon-text" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(44px, 4.5vw, 68px)' }}>
-                    Building<br/>
-                    Solutions<br/>
+                    Building<br />
+                    Solutions<br />
                     Under Pressure
                   </h2>
-                  
-                  <p className="text-[#C9A26D] leading-[1.0] mb-6 hackathon-text" 
-                     style={{ fontFamily: "'Allura', cursive", fontSize: 'clamp(32px, 3.5vw, 48px)' }}>
+
+                  <p className="text-[#C9A26D] leading-[1.0] mb-6 hackathon-text"
+                    style={{ fontFamily: "'Allura', cursive", fontSize: 'clamp(32px, 3.5vw, 48px)' }}>
                     through innovation.
                   </p>
-                  
+
                   <p className="text-white/70 max-w-[90%] leading-[1.6] mb-4 font-light hackathon-text" style={{ fontFamily: "'Inter', sans-serif", fontSize: '13px' }}>
                     Hackathons have shaped my journey as a developer, pushing me to rapidly build, learn and solve complex problems under tight deadlines.
                   </p>
@@ -311,7 +323,7 @@ const Hackathons = () => {
 
                   <div className="hackathon-text mt-8">
                     <MagneticButton variant="outline-bronze">
-                      View My Achievements <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                      View My Achievements <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>
                     </MagneticButton>
                   </div>
                 </div>
@@ -319,23 +331,23 @@ const Hackathons = () => {
 
               {/* ── Center: Branching Timeline ── */}
               <div className="hidden lg:flex w-[60px] relative justify-center mt-[10px]">
-                 <div ref={timelineLineRef} className="absolute top-[90px] bottom-[90px] w-[1px] bg-[#C9A26D] shadow-[0_0_15px_rgba(201,162,109,0.8)] z-0" />
+                <div ref={timelineLineRef} className="absolute top-[90px] bottom-[90px] w-[1px] bg-[#C9A26D] shadow-[0_0_15px_rgba(201,162,109,0.8)] z-0" />
 
-                 <div className="w-full flex flex-col justify-start z-10">
-                   {[1, 2, 3].map((num) => {
-                     return (
-                       <div key={num} className="relative w-full flex items-center justify-center mb-6 last:mb-0 hackathon-node" style={{ height: '185px' }}>
-                         <span className="absolute -left-8 text-[16px] font-light text-[#C9A26D] drop-shadow-[0_0_8px_rgba(201,162,109,0.8)]"
-                               style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                           0{num}
-                         </span>
-                         <div className="w-2 h-2 rounded-full bg-[#C9A26D] shadow-[0_0_12px_rgba(201,162,109,1)]" />
-                         {/* Branch Line */}
-                         <div className="absolute left-[50%] h-[1px] w-[150%] bg-gradient-to-r from-[#C9A26D] to-transparent shadow-[0_0_8px_rgba(201,162,109,0.5)] origin-left" />
-                       </div>
-                     );
-                   })}
-                 </div>
+                <div className="w-full flex flex-col justify-start z-10">
+                  {[1, 2, 3].map((num) => {
+                    return (
+                      <div key={num} className="relative w-full flex items-center justify-center mb-6 last:mb-0 hackathon-node" style={{ height: '185px' }}>
+                        <span className="absolute -left-8 text-[16px] font-light text-[#C9A26D] drop-shadow-[0_0_8px_rgba(201,162,109,0.8)]"
+                          style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                          0{num}
+                        </span>
+                        <div className="w-2 h-2 rounded-full bg-[#C9A26D] shadow-[0_0_12px_rgba(201,162,109,1)]" />
+                        {/* Branch Line */}
+                        <div className="absolute left-[50%] h-[1px] w-[150%] bg-gradient-to-r from-[#C9A26D] to-transparent shadow-[0_0_8px_rgba(201,162,109,0.5)] origin-left" />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* ── Right Side: Floating Frame Cards ── */}
@@ -349,7 +361,7 @@ const Hackathons = () => {
                 {/* Bottom CTA positioned naturally below cards */}
                 <div className="flex justify-center mt-12 w-full hackathon-text">
                   <MagneticButton variant="outline-bronze" className="!px-8 !py-3">
-                    Explore All Hackathons <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    Explore All Hackathons <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>
                   </MagneticButton>
                 </div>
               </div>
@@ -360,7 +372,7 @@ const Hackathons = () => {
           <OrbitalSphereDark />
         </div>
       </section>
-      
+
     </>
   );
 };
